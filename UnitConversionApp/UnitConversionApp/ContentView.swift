@@ -254,6 +254,7 @@ struct ContentView: View {
                     TextField("Temperature", value: $temperature, format: .number)
                         .keyboardType(.decimalPad)
                         .focused($valueIsFocused)
+                        
                     
                     Picker("Temperature Input", selection: $unitTemperatureInput){
                         ForEach(unitsTemperatures, id: \.self){
