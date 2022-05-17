@@ -11,6 +11,10 @@ struct ContentView: View {
     
     @State private var showingScore = false
     @State private var scoreTitle = ""
+    @State private var score = 0
+    @State private var finalScore = 0
+    @State private var countQuestion = 0
+    @State private var showingReset = false
     
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     
@@ -60,7 +64,7 @@ struct ContentView: View {
                 Spacer()
                 Spacer()
                 
-                Text("Score: ???")
+                Text("Score: \(score)")
                     .foregroundColor(.white)
                     .font(.title.bold())
                 
@@ -68,21 +72,45 @@ struct ContentView: View {
             }
             .padding()
         }
+        .alert("Finish", isPresented: $showingReset){
+            Button("Restart", action: askQuestion)
+        } message: {
+            Text("Your final score is \(finalScore)")
+        }
         .alert(scoreTitle, isPresented: $showingScore){
             Button("Continue", action: askQuestion)
         } message: {
-            Text("Your score is ???")
+            Text("Your score is \(score)")
         }
+
+    
     }
     
     func flagTapped(_ number: Int){
+        countQuestion += 1
+        
         if number == correctAnswer {
             scoreTitle = "Correct"
+            score += 1
         } else {
-            scoreTitle = "Wrong"
+            scoreTitle = "Wrong! That's the flag of \(countries[number])"
         }
         
-        showingScore = true
+        if countQuestion == 8 {
+            showingReset = true
+            finalScore = score
+            score = 0
+        }
+        
+        if showingReset {
+            showingScore = false
+        } else {
+            showingScore = true
+        }
+        
+
+        
+        
     }
     
     func askQuestion(){
