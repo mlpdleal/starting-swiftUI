@@ -60,6 +60,7 @@ struct ContentView: View {
                     Picker("Tip percentage", selection: $tipPercentage){
                         ForEach(tipPercentages, id: \.self){
                             Text($0, format: .percent)
+                                .foregroundColor($0 == 0 ? .red : .primary)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -67,6 +68,7 @@ struct ContentView: View {
                     Picker("More tip percentage", selection: $tipPercentage){
                         ForEach(0..<101){
                             Text($0, format: .percent)
+                                .foregroundColor($0 == 0 ? .red : .primary)
                         }
                     }
                 } header: {
