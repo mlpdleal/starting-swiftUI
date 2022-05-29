@@ -47,6 +47,10 @@ struct ContentView: View {
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     
     @State private var correctAnswer = Int.random(in: 0...2)
+    @State private var animationAmount = 1.0
+    @State private var flagRotation = [1.0, 1.0, 1.0]
+    @State private var flagOpacity = [1.0, 1.0, 1.0]
+    @State private var flagScale = [1.0, 1.0, 1.0]
     
     var body: some View {
         
@@ -74,11 +78,28 @@ struct ContentView: View {
                     
                     ForEach(0..<3){ number in
                         Button {
-                            flagTapped(number)
+                            withAnimation{
+                                flagRotation[number] += 360
+                                flagOpacity = [0.75, 0.75, 0.75]
+                                flagOpacity[number] = 1.0
+                                
+                                flagScale = [0.8, 0.8, 0.8]
+                                flagScale[number] = 1.0
+                                flagTapped(number)
+                                
+                            }
                         } label: {
-                            FlagView(imageName: countries[number])
+                            withAnimation(.easeIn(duration: 1.0)){
+                                FlagView(imageName: countries[number])
+                                    .opacity(flagOpacity[number])
+                                    .scaleEffect(flagScale[number])
+                                    .rotation3DEffect(.degrees(flagRotation[number]), axis: (x: 0, y: 1, z: 0))
+                            }
+                   
                         }
+                      
                     }
+                    
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
@@ -124,6 +145,7 @@ struct ContentView: View {
             showingReset = true
             finalScore = score
             score = 0
+            countQuestion = 0
         }
         
         if showingReset {
@@ -140,6 +162,9 @@ struct ContentView: View {
     func askQuestion(){
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        
+        flagScale = [1.0, 1.0, 1.0]
+        flagOpacity = [1.0, 1.0, 1.0]
     }
 }
 
